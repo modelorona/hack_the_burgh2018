@@ -15,5 +15,6 @@ def check_age(urls):
         update = soup.find("td",{"id":"update_0"}).text
         print(age,update)
 
+
 from db import bad_sites
 check_age(bad_sites)
