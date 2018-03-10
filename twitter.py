@@ -34,4 +34,3 @@ def check_user(id=None, screen_name=None):
             avg += 2*value
         avg += value
     print(str(avg/7))
-
