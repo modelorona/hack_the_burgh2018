@@ -3,6 +3,8 @@ import sys
 import subprocess
 import db
 
+import domain
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -23,6 +25,9 @@ if __name__ == '__main__':
             opt = open('gsr.txt', 'r')
             for line in opt:
                 print(db.find_in_db(line))
+        elif sys.argv[1] == '-d':
+            # check the domain age of the given site url
+
         else:
             print("Fail")
 

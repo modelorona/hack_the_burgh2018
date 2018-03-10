@@ -89,3 +89,4 @@ bad_sites = ["24sevendailynews.com",
 # see if the given link is in the bad sites list
 def find_in_db(u):
     return str(u.strip().replace('\n', '')) in bad_sites
+
