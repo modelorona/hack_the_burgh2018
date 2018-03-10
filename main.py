@@ -1,6 +1,7 @@
 import twitter
 import sys
 import subprocess
+import db
 
 
 if __name__ == '__main__':
@@ -21,7 +22,7 @@ if __name__ == '__main__':
             # output, error = process.communicate()
             opt = open('gsr.txt', 'r')
             for line in opt:
-                print(line)
+                print(db.find_in_db(line))
         else:
             print("Fail")
 
