@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hack-the-burgh",
+  "private_key_id": "848119bd429e9c5badf37c8070e23d7cce16f62d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDs20gUk9ThRXVS\nggbc/DYZs9OtJ9JsoNGN+ze3o80ff5Zwv/gFyyuRdeEQRVKEHpCllZ2luHeXnFeq\nLRWMZPZZAEBGzoFqHNyieyAtZSQPurth3GSeVRZE3cwv3RumzPWZdU1okiwwRyfn\ntBRxMbbLU3+bQkJ0DklPaDQza0qLOfZcUGzIGEZlaZ+aiybGR/jlhLqkTRc4HxX1\nF+lqqHkHtsN50Fu2F9/cAqJso2ikuW+VXvFWj2d++JC2yJygJJmQzdhJnZaW7A3Z\nvrP1sJ0Urf04yaV2baGxB+ONYhGxckGWb4fGGz2qmd7dY4tVl0Rzbbyyz8s7LWB2\nfVqEWYZVAgMBAAECggEAAORi4FyX6AOXZD8P8kbKXGY2o48bIVHTAYqzxusxkt1G\nhd5b+2/WP+3/1x+gvnY18N6/aLe/fhSv3t4GTY5LMVdBMSSSbDFxhU3lcX3FWRsq\n/FR7UAdEUcCqrLKv+51+pTt6clZl3aEytBsrtfuHr9uagTJ+rqEnwDVvGIdec0oM\nOMxXPZcfHKXWyZVdNVhaApD8aLmVXK1m+t1sXJicgPO0VegjY9uRat/8U3bvWsXh\n4xCt7daMn/+G6CoRRUK+9z3dA4tYh5Hmdzv/emWFKa5EDFDKS2x1J5xCWC+ywDq8\n5TOsnGnFtpGEqi3p7dt3PW0ndgQ726YEtrs9MrKKoQKBgQD+gA9qnu2sKS/9LxmS\nPrY2pyK+Ep5FbwvM4SmV5w+gEwlMr3k569kGBDwZGWLGCgE76+BozhY4dkfOA3OW\npy/YsXCPhOtg4ZMBLiR9K6c1GEo8UHqliOxVjw6Rc5QfE6LyJn8QsqTY0URRmqAj\nZu0S93Kto+dgVD1MHqiZ22clsQKBgQDuQJqjhWRJtBT7Zhz8PKILPMJKev7io4PQ\nP0ZZ0BQ0JwZm+WjaMCOaCaS1I4qyLIUijnxVIbSBAocJ2uZs9yqRG5I5NijtF5rU\nk7ohfnDYyD+RhANP02asnk6NV8FgAYyXW/Uxg3qOUOydKqwj52Gz0i33z/mcdDEy\nLudP6gJ/5QKBgQCNeAYZ0IpxXtvMM3hVcQK80p9fZN4R3q6Cjs8dAroO00YiGJCc\nf9u9mnEFyrS7PSh+dJnj6Fs1u5oijIyePAU+wTO+s7ZbvkiHKW0jHzbtLrllWZ8z\nkS8+SC1i8QpvU+0KChgr4gH8fCcr7XYC993k4yQeHbQqOelw/MHf9LQboQKBgQDd\noaF4vizF10yxdJNAHZNMStAegv46jIuhHEtwXv18alUtU5QzbBaiQ5hBnPd3uax7\nsfp9IyaL4HMIOuahtOeXJwPGTtiRfaTdXTMH11xYfSeNUTXXezuHFpjSKTFNAwPr\nBXM5BSrr2uHRbpHFsIeVxM5YOdLktL3TBgjNsU1z9QKBgCcnVm47wvF2180o+G1X\nfry0PnQYTgPNq/H3iqqvVD2RS7xCnmC47LVFFEbRVyzl95tGAjWKBQvq5kvFc1NH\nZ6g0oAMuInzzzk7CqMPCeiMD949bv/9dBoHBw+h1sDuT0XteCLxUUkqyT37Ctfb6\nhvueoNbU8pGc4lxphshWfleb\n-----END PRIVATE KEY-----\n",
+  "client_email": "adamstheman@hack-the-burgh.iam.gserviceaccount.com",
+  "client_id": "112764357060280322260",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/adamstheman%40hack-the-burgh.iam.gserviceaccount.com"
+}
