@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fake News?</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://unpkg.com/sweetalert2@7.15.1/dist/sweetalert2.all.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="col-6 offset-3">
+        <br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br>
+        <h1 class="h4">Enter your suspected facebook bot...</h1>
+        <form action="{{ url_for('fbot') }}" method="POST" id="submitForm">
+            <input type="text" class="form-control mt-3" id="formGroupExampleInput" placeholder="Type your URL here....." name="name">
+            <button type="submit" class="btn btn-primary text-center mt-3 btn-lg">Submit</button>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $('h1[id=fake]').hide();
+    $('#submitForm').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            method: $(this).attr('method'),
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(e) {
+                console.log((e.toString()));
+                swal(
+                    'The Result?',
+                    e['result'].toString(),
+                    'info'
+                );
+                console.log(e);
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+    });
+
+
+</script>
+</body>
