@@ -19,5 +19,5 @@ def dataOnImage(url, min_label_score = 0.0, limit_of_urls = -1):
         for page in information.pages_with_matching_images:
             dict["urls_to_similar_sides"] += [page.url]
     else:
-        for page in information.pages_with_matching_images[:limit_of_urls]:
+        for page in information.pages_with_matching_images[:min(limit_of_urls, len(information.pages_with_matching_images))]:
             dict["urls_to_similar_sides"] += [page.url]
