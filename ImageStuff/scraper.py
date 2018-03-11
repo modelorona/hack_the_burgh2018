@@ -11,9 +11,9 @@ def returnImageUrls(LINK):
     images = None
     time.sleep(1)
     while(True):
-        time.sleep(0.7)
+        time.sleep(1)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(0.2)
+        time.sleep(0.3)
         soup = BeautifulSoup(driver.page_source)
         images = [img['src'] for img in soup.find('div',{'class':'_2eec'}).find_all('img')]
         if(len(images)>50 and tries < 20):
@@ -29,9 +29,9 @@ def returnUrlData(LINK):
     images = None
     time.sleep(1)
     while (True):
-        time.sleep(0.7)
+        time.sleep(1)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(0.2)
+        time.sleep(0.3)
         soup = BeautifulSoup(driver.page_source)
         images = [img['src'] for img in soup.find('div', {'class': '_2eec'}).find_all('img')]
         if (len(images) > 50 and tries < 20):
