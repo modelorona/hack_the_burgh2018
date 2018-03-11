@@ -1,30 +1,8 @@
 import requests
 import math
+from enums import *
 
 HOST = "http://localhost:6001/api/"
-
-class Moves:
-    SHOOT = "shoot"
-    FORWARD = "forward"
-    BACKWARD = "backward"
-    LEFT = "turn-left"
-    RIGHT = "turn-right"
-    USE = "use"
-    SLEFT = "strafe-left"
-    SRIGHT = "strafe-right"
-    SWITCH = "switch-weapon"
-
-
-class Amount:
-    WEEBIT = 2
-    SLOW = 5
-    MEDIUM = 10
-    FAST = 20    
-    NUTS = 30
-    WILD = 40
-    SAVAGE = 50    
-
-
 
 def get_all_player():
     players = requests.get(HOST+"players").json()    
@@ -39,7 +17,7 @@ def get_all_player():
     return my,others
 
 def get_my_player():
-    return requests.get(HOST+"player")
+    return requests.get(HOST+"player").json()
 
 def move(action,amount=10):
     requests.post(HOST+"player/actions",json={"type":action,"amount":amount})
@@ -60,7 +38,7 @@ def get_closest_enemy(my,others):
 def get_distance(my,other):
     return math.hypot(other['x'] - my['x'], other['y'] - my['y'])
 
-def turn_to_point(my_player,other_player):    
+def turn_to_point(my_player,other_player, isPlayer = True):    
     MY_POS , POS  = my_player['position'], other_player['position']
     rad_angle = math.atan2(MY_POS['y']-POS['y'],MY_POS['x']-POS['x'])
     deg_angle = rad2deg(rad_angle)
@@ -71,7 +49,7 @@ def turn_to_point(my_player,other_player):
     distance = get_distance(my_player['position'],other_player['position'])    
     print(distance)
 
-    if remain < 185 and remain > 175 and distance < 200:
+    if remain < 185 and remain > 175 and distance < 200 and isPlayer:
         shoot()
         return
 
@@ -131,3 +109,27 @@ def is_enemy_dead(player):
 
 def shoot():
     requests.post(HOST+"player/actions",json={"type":Moves.SHOOT,"amount":Amount.WEEBIT})    
+
+def go_grab_object(my_player,obj):
+    distance = get_distance(my_player['position'],obj['position'])
+    while distance > 30:
+        turn_to_point(my_player,obj,isPlayer=False)
+        run_straight(Amount.SAVAGE)
+        my_player = get_my_player()
+        distance = get_distance(my_player['position'],obj['position'])
+    
+    if my_player['weapons'][obj['type']]:
+        return True
+    else:
+        return False
+
+def square_up(my_player):
+    objects = requests.get(HOST+"world/objects").json()
+    possible_pickups = []
+    for obj in objects:
+        if obj['type'] == GunType.SHOTGUN:
+            possible_pickups.append(obj)
+
+    closest_obj = sorted(possible_pickups,key=lambda x: x['distance'])[0]
+    return go_grab_object(my_player,closest_obj)
+
