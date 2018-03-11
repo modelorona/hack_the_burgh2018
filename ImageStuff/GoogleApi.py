@@ -5,14 +5,14 @@ from google.cloud import vision
 from google.cloud.vision import types
 import os
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=os.path.join(os.path.dirname(__file__), 'hack-the-burgh-848119bd429e.json')
-
+import requests
 
 def annotate(path):
     """Returns web annotations given the path to an image."""
     client = vision.ImageAnnotatorClient()
 
-    image = types.Image()
-    image.source.image_uri = path
+    content = requests.get(path, allow_redirects=True).content
+    image = types.Image(content=content)
 
     web_detection = client.web_detection(image=image).web_detection
 

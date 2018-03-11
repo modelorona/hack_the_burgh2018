@@ -18,8 +18,9 @@ def returnImageUrls(LINK):
         time.sleep(2)
         tries +=1
 
-    print(images)
+    return images
 
+    """
     driver.get(LINK)
     posts = None
 
@@ -27,7 +28,7 @@ def returnImageUrls(LINK):
 
     while(True):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        soup = BeautifulSoup(driver.page_source)
+        soup = BeautifulSoup(driver.page_source,"lxml")
         posts = soup.find_all('div',{'class':'_q7o'})
         if(len(posts)>30 and tries < 20):
             for post in posts:
@@ -36,5 +37,4 @@ def returnImageUrls(LINK):
                 POSTS.append({"time_stamp":time_stamp.text,"content":content.text})
             break
 
-
-    return POSTS
+    return POSTS"""
