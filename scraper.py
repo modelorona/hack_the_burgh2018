@@ -2,7 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 
-driver = webdriver.Chrome("./chromedriver")
+driver = webdriver.Chrome("./chromedriver_mac")
 
 
 
