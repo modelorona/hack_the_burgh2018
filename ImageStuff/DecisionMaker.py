@@ -34,7 +34,6 @@ def returnScoreText(LINK):
             number_of_iterations += 1
     except AttributeError:
         return sum(dateList) / (number_of_iterations+1)
-    print (dateList)
 
     return sum(dateList)/number_of_iterations
 
