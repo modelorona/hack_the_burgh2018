@@ -27,3 +27,7 @@ class GunType:
 class AmmoType:
     SHOTGUN = "Shotgun shells"
     PISTOL = "Ammo clip"
+
+class Health:
+    POTION = "Health Potion +1% health"
+    ARMOR = "Green armor 100%"

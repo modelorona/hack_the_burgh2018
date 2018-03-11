@@ -5,6 +5,12 @@ import random
 
 HOST = "http://localhost:6001/api/"
 
+def is_enemy_dead(player):
+    player = requests.get(HOST+"players/"+str(player['id'])).json()
+    if player['health'] <= 0:
+        return True
+    return False
+
 def get_all_player():
     players = requests.get(HOST+"players").json()    
     my = None
@@ -12,6 +18,9 @@ def get_all_player():
     for player in players:
         if player['isConsolePlayer']:
             my = player
+            continue
+        
+        if is_enemy_dead(player):
             continue
         
         others.append(player)
@@ -28,7 +37,6 @@ def get_player_details(id):
 def rad2deg(rad):
     return math.degrees(rad)
 
-
 def get_closest_enemy(my,others):
     distances = []
     for other in others:
@@ -39,7 +47,7 @@ def get_closest_enemy(my,others):
 def get_distance(my,other):
     return math.hypot(other['x'] - my['x'], other['y'] - my['y'])
 
-def turn_to_point(my_player,other_player, isPlayer = True,is_visible=True):    
+def turn_to_point(my_player,other_player,is_visible,isPlayer = True):    
     MY_POS , POS  = my_player['position'], other_player['position']
     if not is_visible:    
         rad_angle = math.atan2(MY_POS['y']-(POS['y']-650 if POS['y'] < 0 else POS['y'] + 650),MY_POS['x']-(POS['x']-650 if POS['x']<0 else POS['x']+650))        
@@ -52,10 +60,12 @@ def turn_to_point(my_player,other_player, isPlayer = True,is_visible=True):
 
     distance = get_distance(my_player['position'],other_player['position'])    
 
+    if is_visible and distance < 200:
+        shoot()
+
     if remain < 185 and remain > 175 and distance < 200 and isPlayer:
         shoot()
         return
-
     
 
     if distance > 400:
@@ -81,8 +91,11 @@ def run_backwards(amount):
     move(Moves.BACKWARD,amount)
 
 def update_players(my_player,other_player):
-    my_player = get_player_details(my_player['id'])
-    other_player = get_player_details(other_player['id'])
+    # my_player = get_player_details(my_player['id'])
+    # other_player = get_player_details(other_player['id'])
+    my_player,other_players = get_all_player()
+    other_player = get_closest_enemy(my_player,other_players)
+    
     return my_player,other_player
 
 CALLED = 0
@@ -107,7 +120,7 @@ def decide_where_to_move(distance, is_visible = False):
     #     move(Moves.BACKWARD,Amount.SAVAGE)
     #     return
 
-    if distance > 500:
+    if distance > 400:
         run_straight(Amount.SAVAGE)        
     elif distance > 300:
         run_straight(Amount.MEDIUM)        
@@ -132,11 +145,6 @@ def move_to_enemy(my_player,other_player):
         my_player,other_player = update_players(my_player,other_player)        
         distance = get_distance(my_player['position'],other_player['position'])
 
-def is_enemy_dead(player):
-    player = requests.get(HOST+"players/"+str(player['id'])).json()
-    if player['health'] <= 0:
-        return True
-    return False
 
 def shoot():
     requests.post(HOST+"player/actions",json={"type":Moves.SHOOT,"amount":Amount.WEEBIT})    
@@ -185,3 +193,20 @@ def get_shells(my_player):
 def reload_ammo(my_player):
     if my_player['ammo']['Shells']< 5:
         get_shells(my_player)
+
+
+def pick_up_health(my_player):
+    objects = requests.get(HOST+"world/objects").json()
+    possible_pickups = []
+    for obj in objects:
+        if obj['type']==Health.POTION:
+            possible_pickups.append(obj)
+    
+    closest_obj = sorted(possible_pickups,key=lambda x: x['distance'])[0]
+    return go_grab_object(my_player,closest_obj,picking_weapon=False)
+
+
+def health_is_up_there(my_player):
+    if my_player['health']<50:
+        while(not (my_player['health']>50)):
+            pick_up_health(my_player)
