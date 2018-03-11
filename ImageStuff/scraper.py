@@ -9,7 +9,7 @@ def returnImageUrls(LINK):
     tries = 0
     driver.get(LINK+"photos/")
     images = None
-    time.sleep(1)
+    time.sleep(2.5)
     while(True):
         time.sleep(1)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -27,7 +27,7 @@ def returnUrlData(LINK):
     tries = 0
     driver.get(LINK + "photos/")
     images = None
-    time.sleep(1)
+    time.sleep(2.5)
     while (True):
         time.sleep(1)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")

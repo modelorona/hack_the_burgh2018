@@ -51,16 +51,31 @@ def isFake (LINK):
         return True
 
 
-
+print("\n\n\n\n")
 print(returnScoreText("https://www.facebook.com/PenelopeCruzOfficial/"))
+print(returnScoreLabels("https://www.facebook.com/PenelopeCruzOfficial/"))
+print(isFake("https://www.facebook.com/PenelopeCruzOfficial/"))
+print("\n\n\n\n")
 print(returnScoreText("https://www.facebook.com/motiwafashiondesinger/"))
+print(returnScoreLabels("https://www.facebook.com/motiwafashiondesinger/"))
+print(isFake("https://www.facebook.com/PenelopeCruzOfficial/"))
+print("\n\n\n\n")
 print(returnScoreText("https://www.facebook.com/FitnessMotivation123/"))
+print(returnScoreLabels("https://www.facebook.com/FitnessMotivation123/"))
+print(isFake("https://www.facebook.com/PenelopeCruzOfficial/"))
+print("\n\n\n\n")
 print(returnScoreText("https://www.facebook.com/pavers.shoes/"))
+print(isFake("https://www.facebook.com/PenelopeCruzOfficial/"))
 print(returnScoreText("https://www.facebook.com/BruceLee"))
+print(isFake("https://www.facebook.com/PenelopeCruzOfficial/"))
+print("\n\n\n\n")
 
 
+
+
+"""
 print(returnScoreLabels("https://www.facebook.com/PenelopeCruzOfficial/"))
 print(returnScoreLabels("https://www.facebook.com/motiwafashiondesinger/"))
 print(returnScoreLabels("https://www.facebook.com/FitnessMotivation123/"))
 print(returnScoreLabels("https://www.facebook.com/pavers.shoes/"))
-print(returnScoreLabels("https://www.facebook.com/BruceLee"))
+print(returnScoreLabels("https://www.facebook.com/BruceLee"))"""
