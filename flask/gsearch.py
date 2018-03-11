@@ -27,7 +27,7 @@ def search(article_name):
     file = open('gsr.txt', 'w+')
     for r in cleaned_urls:
         file.write(str(r) + '\n')
-    file.write('EOL\n\n')  # to signify the end of this one search
+    # file.write('EOL\n\n')  # to signify the end of this one search
     file.close()
 
 
