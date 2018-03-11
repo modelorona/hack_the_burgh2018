@@ -1,10 +1,6 @@
-import twitter
+from flask import twitter, db
 import sys
 import subprocess
-import db
-
-import domain
-
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -27,7 +23,7 @@ if __name__ == '__main__':
                 print(db.find_in_db(line))
         elif sys.argv[1] == '-d':
             # check the domain age of the given site url
-
+            pass
         else:
             print("Fail")
 

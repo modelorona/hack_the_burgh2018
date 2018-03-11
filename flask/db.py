@@ -1,5 +1,6 @@
 # saves the url to the database
-bad_sites = ["24sevendailynews.com",
+bad_sites = ["24sevendailynews.com",  # WORKS
+             "hotnewsphil.blogspot.com",  # WORKS
              "akoy-pilipino.blogspot.com",
              "aljazeera-tv.com",
              "allthingspinoy.com",
@@ -32,7 +33,7 @@ bad_sites = ["24sevendailynews.com",
              "filipinewsph.net",
              "grpshorts.blogspot.com",
              "theguard1an.com",
-             "hotnewsphil.blogspot.com",
+             "hotnewsphil.blogspot.com",  # WORKS
              "www.iampilipino.com",
              "www.leaknewsph.com",
              "www.maharlikanews.com",

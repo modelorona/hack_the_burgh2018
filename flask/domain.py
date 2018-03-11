@@ -1,6 +1,6 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import time
+
 URL = "https://www.prepostseo.com/bulk-domain-age-checker"
 
 
@@ -22,5 +22,5 @@ def check_age(urls):
         except:
             print("INVALID URL")
 
-from db import bad_sites
+from flask.db import bad_sites
 check_age(bad_sites)
