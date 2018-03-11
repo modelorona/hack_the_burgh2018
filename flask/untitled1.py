@@ -9,6 +9,199 @@ from bs4 import BeautifulSoup
 
 
 app = Flask(__name__, template_folder='templates')
+
+import argparse
+import io
+
+from google.cloud import vision
+from google.cloud.vision import types
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=os.path.join(os.path.dirname(__file__), 'hack-the-burgh-848119bd429e.json')
+import requests
+
+def annotate(path):
+    """Returns web annotations given the path to an image."""
+    client = vision.ImageAnnotatorClient()
+
+    content = requests.get(path, allow_redirects=True).content
+    image = types.Image(content=content)
+
+    web_detection = client.web_detection(image=image).web_detection
+
+    return web_detection
+
+
+def report(annotations):
+    """Prints detected features in the provided web annotations."""
+    if annotations.pages_with_matching_images:
+        print('\n{} Pages with matching images retrieved'.format(
+            len(annotations.pages_with_matching_images)))
+
+        for page in annotations.pages_with_matching_images:
+            print('Url   : {}'.format(page.url))
+
+    if annotations.full_matching_images:
+        print ('\n{} Full Matches found: '.format(
+               len(annotations.full_matching_images)))
+
+        for image in annotations.full_matching_images:
+            print('Url  : {}'.format(image.url))
+
+    if annotations.partial_matching_images:
+        print ('\n{} Partial Matches found: '.format(
+               len(annotations.partial_matching_images)))
+
+        for image in annotations.partial_matching_images:
+            print('Url  : {}'.format(image.url))
+
+    if annotations.web_entities:
+        print ('\n{} Web entities found: '.format(
+            len(annotations.web_entities)))
+
+        for entity in annotations.web_entities:
+            print('Score      : {}'.format(entity.score))
+            print('Description: {}'.format(entity.description))
+
+
+def urlInformation (url):
+    return annotate(url)
+
+
+import GettingData as G
+import scraper as s
+from datetime import datetime
+
+most_common_spam_words = ["4u", "accept", "credit", "cards", "act", "now!", "don’t", "hesitate!", "additional", "income", "addresses", "on", "cd", "all", "natural", "amazing", "apply", "online", "as", "seen", "on", "auto", "email", "removal", "avoid", "bankruptcy", "be", "amazed", "be", "your", "own", "boss", "being", "a", "member", "big", "bucks", "bill", "1618", "billing", "address", "billion", "dollars", "brand", "new", "pager", "bulk", "email", "buy", "direct", "buying", "judgments", "cable", "converter", "call", "free", "call", "now", "calling", "creditors", "can’t", "live", "without", "cancel", "at", "any", "time", "cannot", "be", "combined", "with", "any", "other", "offer", "cash", "bonus", "cashcashcash", "casino", "cell",", ""phone", "cancer", "scam", "cents", "on", "the", "dollar", "check", "or", "money", "order", "claims", "not", "to", "be", "selling", "anything", "claims", "to", "be", "in", "accordance", "with", "some", "spam", "law", "claims", "to", "be", "legal", "join", "millions", "of", "americans", "laser", "printer", "limited", "time", "only", "long", "distance", "phone", "offer", "lose", "weight", "spam", "lower", "interest", "rates", "lower", "monthly", "payment", "lowest", "price", "luxury", "car", "mail", "in", "order", "form", "marketing", "solutions", "mass", "email", "meet", "singles", "member", "stuff", "message", "contains", "disclaimer", "mlm", "money", "back", "money", "making", "month", "trial", "offer", "more", "internet", "traffic", "mortgage", "rates", "multi", "level", "marketing", "name", "brand", "new", "customers", "only", "new", "domain", "extensions", "nigerian", "no", "age", "restrictions", "no", "catch", "no", "claim", "forms", "no", "cost", "no", "credit", "check", "no", "disappointment", "no", "experience", "no", "fees", "no", "gimmick", "no", "inventory", "no", "investment", "no", "medical", "exams", "no", "middleman", "no", "obligation", "no", "purchase", "necessary", "unsecured", "credit/debt", "urgent", "us", "dollars", "vacation", "offers", "viagra", "and", "other", "drugs", "wants", "credit", "card", "we", "hate", "spam", "claims", "you", "are", "a", "winner", "claims", "you", "registered", "with", "some", "kind", "of", "partner", "click", "below", "click", "here", "link", "click", "to", "remove", "click", "to", "remove", "mailto", "compare", "rates", "compete", "for", "your", "business", "confidentially", "on", "all", "orders", "congratulations", "consolidate", "debt", "and", "credit", "copy", "accurately", "copy", "dvds", "credit", "bureaus", "credit", "card", "offers", "cures", "baldness", "dear", "email", "dear", "friend", "dear", "somebody", "different", "reply", "to", "dig", "up", "dirt", "on", "friends", "direct", "email", "direct", "marketing", "discusses", "search", "engine", "listings", "do", "it", "today", "don’t", "delete", "drastically", "reduced", "earn", "per", "week", "easy", "terms", "eliminate", "bad", "credit", "email", "harvest", "email", "marketing", "expect", "to", "earn", "fantastic", "deal", "fast", "viagra", "delivery", "financial", "freedom", "find", "out", "anything", "for", "free", "no", "questions", "asked", "no", "selling", "no", "strings", "attached", "not", "intended", "off", "shore", "offer", "expires", "offers", "coupon", "offers", "extra", "cash", "offers", "free", "(often", "stolen)", "passwords", "once", "in", "lifetime", "one", "hundred", "percent", "free", "one", "hundred", "percent", "guaranteed", "one", "time", "mailing", "online", "biz", "opportunity", "online", "pharmacy", "only", "$", "opportunity", "opt", "in", "order", "now", "order", "status", "orders", "shipped", "by", "priority", "mail", "outstanding", "values", "pennies", "a", "day", "people", "just", "leave", "money", "laying", "around", "please", "read", "potential", "earnings", "print", "form", "signature", "print", "out", "and", "fax", "produced", "and", "sent", "out", "profits", "promise", "you", "…!", "pure", "profit", "real", "thing", "refinance", "home", "removal", "instructions", "remove", "in", "quotes", "remove", "subject", "removes", "wrinkles", "reply", "remove", "subject", "requires", "initial", "investment", "reserves", "the", "right", "we", "honor", "all", "weekend", "getaway", "what", "are", "you", "waiting", "for?", "while", "supplies", "last", "while", "you", "sleep", "who", "really", "wins?", "why", "pay", "more?", "for", "instant", "access", "for", "just", "$", "(some", "amt)", "free", "access", "free", "cell", "phone", "free", "consultation", "free", "dvd", "free", "grant", "money", "free", "hosting", "free", "installation", "free", "investment", "free", "leads", "free", "membership", "free", "money", "free", "offer", "free", "preview", "free", "priority", "mail", "free", "quote", "free", "sample", "free", "trial", "free", "website", "full", "refund", "get", "it", "now", "get", "paid", "get", "started", "now", "gift", "certificate", "great", "offer", "guarantee", "have", "you", "been", "turned", "down?", "hidden", "assets", "home", "employment", "human", "growth", "hormone", "if", "only", "it", "were", "that", "easy", "in", "accordance", "with", "laws", "increase", "sales", "increase", "traffic", "insurance", "investment", "decision", "it's", "effective", "reverses", "aging", "risk", "free", "round", "the", "world", "s", "1618", "safeguard", "notice", "satisfaction", "guaranteed", "save", "$", "save", "big", "money", "save", "up", "to", "score", "with", "babes", "section", "301", "see", "for", "yourself", "sent", "in", "compliance", "serious", "cash", "serious", "only", "shopping", "spree", "sign", "up", "free", "today", "social", "security", "number", "special", "promotion", "stainless", "steel", "stock", "alert", "stock", "disclaimer", "statement", "stock", "pick", "stop", "snoring", "strong", "buy", "stuff", "on", "sale", "subject", "to", "credit", "supplies", "are", "limited", "take", "action", "now", "talks", "about", "hidden", "charges", "talks", "about", "prizes", "tells", "you", "it’s", "an", "ad", "terms", "and", "conditions", "the", "best", "rates", "the", "following", "form", "they", "keep", "your", "money", "—", "no", "refund!", "they’re", "just", "giving", "it", "away", "this", "isn’t", "junk", "this", "isn’t", "spam", "university", "diplomas", "unlimited", "will", "not", "believe", "your", "eyes", "winner", "winning", "work", "at", "home", "you", "have", "been", "selected", "your", "trump" "income",]
+
+
+def returnScoreLabels(LINK):
+    scoreLabels = 0
+    numer_of_iterations = 0
+    try:
+        for link in s.returnImageUrls(LINK)[::2]:
+            dataOfImage = G.dataOnImage(str(link), 0.5, 1)
+            for label in dataOfImage["labels"]:
+                for word in label[0].split(' '):
+                    if word.lower() in most_common_spam_words:
+                        scoreLabels += label[1]
+                    numer_of_iterations += 1
+    except AttributeError:
+        return scoreLabels
+
+    return scoreLabels#/numer_of_iterations*100
+
+
+def returnScoreText(LINK):
+    number_of_iterations = 0
+    dateList = []
+    dateobject = datetime.strptime("11 March 2018", '%d %B %Y')
+    try:
+        for dicts in s.returnUrlData(LINK):
+            if dicts["time_stamp"][-4:-2] == "20":
+                dateList += [(dateobject - datetime.strptime(dicts["time_stamp"], '%d %B %Y')).days]
+                dateobject = datetime.strptime(dicts["time_stamp"], '%d %B %Y')
+            number_of_iterations += 1
+    except AttributeError:
+        return sum(dateList) / (number_of_iterations+1)
+
+    return sum(dateList)/number_of_iterations
+
+
+
+    #May want to implement checking the url address of the sites that include this image agains the database of fake news sites.
+
+def isFake (LINK):
+    returnDates = returnScoreText(LINK)
+    returnLabels = returnScoreLabels(LINK)
+    if returnDates > 9 or returnLabels < 5:
+        return False
+    else:
+        return True
+
+
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import time
+
+
+
+def returnImageUrls(LINK):
+    driver = webdriver.Chrome("./chromedriver_mac")
+    tries = 0
+    driver.get(LINK+"photos/")
+    images = None
+    time.sleep(2.5)
+    while(True):
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(0.3)
+        soup = BeautifulSoup(driver.page_source)
+        images = [img['src'] for img in soup.find('div',{'class':'_2eec'}).find_all('img')]
+        if(len(images)>50 and tries < 20):
+            break
+        tries +=1
+    driver.close()
+    return images
+
+def returnUrlData(LINK):
+    driver = webdriver.Chrome("./chromedriver_mac")
+    tries = 0
+    driver.get(LINK + "photos/")
+    images = None
+    time.sleep(2.5)
+    while (True):
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(0.3)
+        soup = BeautifulSoup(driver.page_source)
+        images = [img['src'] for img in soup.find('div', {'class': '_2eec'}).find_all('img')]
+        if (len(images) > 50 and tries < 20):
+            break
+        tries += 1
+
+    driver.get(LINK)
+    posts = None
+
+    POSTS = []
+    while(True):
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        soup = BeautifulSoup(driver.page_source,"lxml")
+        posts = soup.find_all('div',{'class':'_q7o'})
+        if(len(posts)>30 and tries < 20):
+            for post in posts:
+                time_stamp = post.find("span",{"class":"timestampContent"})
+                content = post.find("div",{"class":"userContent"})
+                POSTS.append({"time_stamp":time_stamp.text,"content":content.text})
+            break
+    driver.close()
+    return POSTS
+
+def dataOnImage(url, min_label_score = 0.0, limit_of_urls = -1):
+    """
+    dict file structure:
+        "labels": [(labe_name, score)]
+        "urls_to_similar_sides": ["url"]
+    """
+
+    information = GoogleApi.annotate(url)
+    dict = {"labels": [],
+            "urls_to_similar_sides": []}
+
+    for entity in information.web_entities:
+        if entity.score >= min_label_score:
+            dict["labels"] += [(entity.description, entity.score)]
+
+    if (limit_of_urls == -1):
+        for page in information.pages_with_matching_images:
+            dict["urls_to_similar_sides"] += [page.url]
+    else:
+        for page in information.pages_with_matching_images[:min(limit_of_urls, len(information.pages_with_matching_images))]:
+            dict["urls_to_similar_sides"] += [page.url]
+
+    return dict
+
+
+#report(annotate(args.image_url))
 # saves the url to the database
 bad_sites = ["24sevendailynews.com",
              "akoy-pilipino.blogspot.com",
@@ -334,7 +527,7 @@ def check_user(id=None, screen_name=None):
 
 @app.route('/')
 def index():
-    return render_template('twitterEntry.html')
+    return render_template('selection.html')
 
 @app.route('/tbot', methods=['POST', 'GET'])
 def tbot():
